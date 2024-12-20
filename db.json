@@ -1,0 +1,24 @@
+{
+  "shoplist": [
+    {
+      "id": "1",
+      "name": "무",
+      "isBought": false
+    },
+    {
+      "id": "2",
+      "name": "배추",
+      "isBought": false
+    },
+    {
+      "id": "3",
+      "name": "PUT TEST",
+      "isBought": false
+    },
+    {
+      "id": "4",
+      "name": "고춧가루",
+      "isBought": false
+    }
+  ]
+}
