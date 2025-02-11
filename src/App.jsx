@@ -8,7 +8,11 @@ import CartFooter from "./components/CartFooter";
 
 function App() {
   // 서버로 부터 API 호출해서 쇼핑 목록 받아오기
-  const apiUrl = "http://localhost:1337/shoplist";
+  // const apiUrl = "http://localhost:1337/shoplist";
+  // const apiUrl = "http://localhost:3000/shoplist";
+  // const apiUrl = "http://localhost:8088/api/shoplist";
+  const apiUrl = "http://localhost:18088/api/shoplist";
+  // const apiUrl = "http://localhost:8927/api/category";
   // const [itemList, setItemList] = useState([
   //   { id: 1, name: "무", isBought: false },
   //   { id: 2, name: "배추", isBought: false },
@@ -88,17 +92,53 @@ function App() {
     }
   };
   //  id => isBought를 true <-> false
-  const toggleBought = (id) => {
-    const newItemList = itemList.map((item) =>
-      item.id === id ? { ...item, isBought: !item.isBought } : item
-    );
-    setItemList(newItemList);
+  const toggleBought = async (id) => {
+    // const newItemList = itemList.map((item) =>
+    //   item.id === id ? { ...item, isBought: !item.isBought } : item
+    // );
+    // setItemList(newItemList);
+    // id로 아이템 찾아서
+    // 해당 아이템의 isBought 값을 반전 true <-> false
+    const updatedItem = itemList.find((item) => item.id === id);
+    updatedItem.isBought = !updatedItem.isBought;
+    // 서버에 UPDATE 요청 전송
+
+    try {
+      const response = await fetch(`${apiUrl}/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "Application/json",
+        },
+        body: JSON.stringify(updatedItem),
+      });
+      if (!response.ok) {
+        throw new Error("데이터를 수정하지 못했습니다.");
+      }
+      fetchItems();
+    } catch (err) {
+      console.error(err);
+      setError(err.message);
+    }
   };
 
   //  id => item 삭제
-  const deleteItem = (id) => {
-    const newItemList = itemList.filter((item) => item.id !== id);
-    setItemList(newItemList);
+  const deleteItem = async (id) => {
+    // const newItemList = itemList.filter((item) => item.id !== id);
+    // setItemList(newItemList);
+    // DELETE method로 요청
+    try {
+      const response = await fetch(`${apiUrl}/${id}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        throw new Error("아이템을 삭제하지 못했습니다.");
+      }
+      // 목록 갱신
+      fetchItems();
+    } catch (err) {
+      console.log(err);
+      setError(err.message);
+    }
   };
 
   return (
